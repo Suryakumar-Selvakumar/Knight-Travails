@@ -52,33 +52,39 @@ for (let x = 0; x < knightTravails.length; x++) {
 
 function knightMoves(src, dst) {
   let q = [],
-    count = 0;
+    count = 0,
+    edgeArr = [];
 
+  edgeArr.push(src);
   visited[src[0]][src[1]] = true;
-  src = knightTravails[src[0]][src[1]];
-  q.push(src[0], src[1]);
+  let firstCell = knightTravails[src[0]][src[1]];
+  for (const adjCells of firstCell) {
+    q.push(adjCells);
+  }
 
   while (q.length) {
     const curr = q.shift();
     let knightTravArr = knightTravails[curr[0]][curr[1]];
 
-    console.log(curr);
+    edgeArr.push(curr);
     visited[curr[0]][curr[1]] = true;
+
+    for (const edge of knightTravArr) {
+      if (edge[0] === dst[0] && edge[1] === dst[1]) {
+        edgeArr.push(edge);
+        return edgeArr;
+      }
+    }
 
     for (const x of knightTravArr) {
       if (!visited[x[0]][x[1]]) {
         visited[x[0]][x[1]] = true;
         q.push(x);
-        count++;
       }
-    }
-
-    if (curr[0] === dst[0] && curr[1] === dst[1]) {
-      return count;
     }
   }
 }
 
-// console.log(knightTravails[1][6]);
+// console.log(knightTravails[2][1]);
 // console.log(knightTravails[7][7]);
-console.log(knightMoves([0, 0], [7, 7]));
+console.log(knightMoves([3, 3], [0, 0]));
