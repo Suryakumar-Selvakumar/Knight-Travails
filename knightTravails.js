@@ -10,14 +10,14 @@ const knightTravails = [
 ];
 
 const visited = [
-  [[], [], [], [], [], [], [], []],
-  [[], [], [], [], [], [], [], []],
-  [[], [], [], [], [], [], [], []],
-  [[], [], [], [], [], [], [], []],
-  [[], [], [], [], [], [], [], []],
-  [[], [], [], [], [], [], [], []],
-  [[], [], [], [], [], [], [], []],
-  [[], [], [], [], [], [], [], []],
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],
 ];
 
 function knightMoveCalculator(x, y) {
@@ -45,7 +45,6 @@ for (let x = 0; x < knightTravails.length; x++) {
         !(move[1] > 7)
       ) {
         knightTravails[x][y] = knightTravails[x][y].concat([move]);
-        visited[x][y] = visited[x][y].concat([false]);
       }
     });
   }
@@ -55,42 +54,24 @@ function knightMoves(src, dst) {
   let q = [],
     count = 0;
 
-  visited[src[0]][src[1]][0] = true;
-  console.log(visited);
+  visited[src[0]][src[1]] = true;
   src = knightTravails[src[0]][src[1]];
   q.push(src[0], src[1]);
 
   while (q.length) {
-    break;
     const curr = q.shift();
+    let knightTravArr = knightTravails[curr[0]][curr[1]];
 
-    let visitedArr = visited[curr[0]][curr[1]],
-      knightTravArr = knightTravails[curr[0]][curr[1]];
-
-    // console.log("K-BEGIN", knightTravArr, "K-END");
-    // console.log("V-BEGIN", visitedArr, "V-END");
+    console.log(curr);
+    visited[curr[0]][curr[1]] = true;
 
     for (const x of knightTravArr) {
-      if (!visitedArr[knightTravArr.indexOf(x)]) {
-        console.log(visitedArr[knightTravArr.indexOf(x)]);
-        visitedArr[knightTravArr.indexOf(x)] = true;
+      if (!visited[x[0]][x[1]]) {
+        visited[x[0]][x[1]] = true;
         q.push(x);
         count++;
       }
     }
-
-    // visitedArr.forEach((elem) => {
-    //   knightTravArr.forEach((edge) => {
-    //     if (visitedArr.indexOf(elem) === knightTravArr.indexOf(edge)) {
-    //       if (!elem) {
-    //         console.log(knightTravArr.indexOf(edge));
-    //         elem = true;
-    //         q.push(edge);
-    //         count++;
-    //       }
-    //     }
-    //   });
-    // });
 
     if (curr[0] === dst[0] && curr[1] === dst[1]) {
       return count;
