@@ -5,7 +5,7 @@ Implemented with:<br>
 - A matrix that represents the chess-board
 - Each matrix cell contains the moves that a knight can make from that cell as an adjacency list
 - BFS Traversal to find all possible moves from source cell to destination cell
-- Path Tracing and Back-Tracking using objects to find the shortest path.
+- Back-Tracking using Recursion to find the shortest path.
 
 ## Sample Output
   => knightMoves( [ 3, 3 ], [ 4, 3 ] );<br>
