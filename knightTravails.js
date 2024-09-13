@@ -52,39 +52,70 @@ for (let x = 0; x < knightTravails.length; x++) {
 
 function knightMoves(src, dst) {
   let q = [],
-    count = 0,
+    backTrackArr = [],
     edgeArr = [];
 
   edgeArr.push(src);
   visited[src[0]][src[1]] = true;
   let firstCell = knightTravails[src[0]][src[1]];
   for (const adjCells of firstCell) {
+    backTrackArr.push({ prev: src, adjCell: adjCells });
     q.push(adjCells);
   }
+  q.push(null);
+  edgeArr.push(null);
 
   while (q.length) {
     const curr = q.shift();
-    let knightTravArr = knightTravails[curr[0]][curr[1]];
-
     edgeArr.push(curr);
-    visited[curr[0]][curr[1]] = true;
-
-    for (const edge of knightTravArr) {
-      if (edge[0] === dst[0] && edge[1] === dst[1]) {
-        edgeArr.push(edge);
-        return edgeArr;
+    if (curr === null) {
+      if (q.length > 0) {
+        q.push(null);
       }
-    }
+    } else {
+      let knightTravArr = knightTravails[curr[0]][curr[1]];
+      visited[curr[0]][curr[1]] = true;
 
-    for (const x of knightTravArr) {
-      if (!visited[x[0]][x[1]]) {
-        visited[x[0]][x[1]] = true;
-        q.push(x);
+      for (const x of knightTravArr) {
+        if (!visited[x[0]][x[1]]) {
+          visited[x[0]][x[1]] = true;
+          backTrackArr.push({ prev: curr, adjCell: x });
+          q.push(x);
+        }
+      }
+
+      for (const edge of knightTravArr) {
+        if (edge[0] === dst[0] && edge[1] === dst[1]) {
+          edgeArr.push(edge);
+          const spth = getShortestPath(backTrackArr, src, dst);
+          return finalOutput(spth);
+        }
       }
     }
   }
 }
 
-// console.log(knightTravails[2][1]);
-// console.log(knightTravails[7][7]);
-console.log(knightMoves([3, 3], [0, 0]));
+function getShortestPath(backTrackArr, src, dst) {
+  if (JSON.stringify(src) === JSON.stringify(dst)) {
+    return [src];
+  }
+
+  for (const obj of backTrackArr) {
+    if (JSON.stringify(obj.adjCell) === JSON.stringify(dst)) {
+      dst = obj.prev;
+      return [obj.adjCell].concat(getShortestPath(backTrackArr, src, dst));
+    }
+  }
+}
+
+function finalOutput(shortestPath) {
+  console.log(
+    `You made it in ${shortestPath.length - 1} moves! Here's your path:`
+  );
+  for (let i = shortestPath.length - 1; i >= 0; i--) {
+    console.log(shortestPath[i]);
+  }
+  return;
+}
+
+knightMoves([0, 0], [7, 7]);
