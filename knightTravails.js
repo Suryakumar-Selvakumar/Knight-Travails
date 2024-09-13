@@ -9,6 +9,17 @@ const knightTravails = [
   [[], [], [], [], [], [], [], []],
 ];
 
+const visited = [
+  [[], [], [], [], [], [], [], []],
+  [[], [], [], [], [], [], [], []],
+  [[], [], [], [], [], [], [], []],
+  [[], [], [], [], [], [], [], []],
+  [[], [], [], [], [], [], [], []],
+  [[], [], [], [], [], [], [], []],
+  [[], [], [], [], [], [], [], []],
+  [[], [], [], [], [], [], [], []],
+];
+
 function knightMoveCalculator(x, y) {
   const knightMoves = [
     [x - 2, y - 1],
@@ -34,39 +45,52 @@ for (let x = 0; x < knightTravails.length; x++) {
         !(move[1] > 7)
       ) {
         knightTravails[x][y] = knightTravails[x][y].concat([move]);
+        visited[x][y] = visited[x][y].concat([false]);
       }
     });
   }
 }
 
 function knightMoves(src, dst) {
-  let f = src[0],
-    l = src[1],
-    q = [],
-    visited = new Array(8).fill(false).map(() => new Array(8).fill(false)),
+  let q = [],
     count = 0;
 
-  visited[f][l] = true;
-  src = knightTravails[f][l];
+  visited[src[0]][src[1]][0] = true;
+  console.log(visited);
+  src = knightTravails[src[0]][src[1]];
   q.push(src[0], src[1]);
 
   while (q.length) {
-    // console.log("BEGIN", q, "END");
+    break;
     const curr = q.shift();
 
-    if (!visited[curr[0]][curr[1]]) {
-      visited[curr[0]][curr[1]] = true;
-      //   console.log("BEGIN", knightTravails[curr[0]][curr[1]], "END");
-      knightTravails[curr[0]][curr[1]].forEach((edge) => {
-        if (edge) {
-          console.log(edge);
-          if (!visited[edge[0]][edge[1]]) {
-            q.push(edge);
-            count++;
-          }
-        }
-      });
+    let visitedArr = visited[curr[0]][curr[1]],
+      knightTravArr = knightTravails[curr[0]][curr[1]];
+
+    // console.log("K-BEGIN", knightTravArr, "K-END");
+    // console.log("V-BEGIN", visitedArr, "V-END");
+
+    for (const x of knightTravArr) {
+      if (!visitedArr[knightTravArr.indexOf(x)]) {
+        console.log(visitedArr[knightTravArr.indexOf(x)]);
+        visitedArr[knightTravArr.indexOf(x)] = true;
+        q.push(x);
+        count++;
+      }
     }
+
+    // visitedArr.forEach((elem) => {
+    //   knightTravArr.forEach((edge) => {
+    //     if (visitedArr.indexOf(elem) === knightTravArr.indexOf(edge)) {
+    //       if (!elem) {
+    //         console.log(knightTravArr.indexOf(edge));
+    //         elem = true;
+    //         q.push(edge);
+    //         count++;
+    //       }
+    //     }
+    //   });
+    // });
 
     if (curr[0] === dst[0] && curr[1] === dst[1]) {
       return count;
