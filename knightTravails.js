@@ -27,7 +27,12 @@ for (let x = 0; x < knightTravails.length; x++) {
   for (let y = 0; y < knightTravails.length; y++) {
     const knightMoves = knightMoveCalculator(x, y);
     knightMoves.forEach((move) => {
-      if (!(move[0] < 0) && !(move[1] < 0)) {
+      if (
+        !(move[0] < 0) &&
+        !(move[1] < 0) &&
+        !(move[0] > 7) &&
+        !(move[1] > 7)
+      ) {
         knightTravails[x][y] = knightTravails[x][y].concat([move]);
       }
     });
@@ -38,34 +43,37 @@ function knightMoves(src, dst) {
   let f = src[0],
     l = src[1],
     q = [],
-    visited = Array(8).fill(false),
+    visited = new Array(8).fill(false).map(() => new Array(8).fill(false)),
     count = 0;
 
-  visited[src] = true;
+  visited[f][l] = true;
   src = knightTravails[f][l];
-  q.push(src);
-  console.log(dst);
+  q.push(src[0], src[1]);
+
   while (q.length) {
-    if (q[0].length === 0) {
-      q.shift();
-    }
-    const curr = q[0].shift();
-    console.log("Queue:", q);
+    // console.log("BEGIN", q, "END");
+    const curr = q.shift();
 
-    if (!visited[curr] && curr !== undefined) {
-      visited[curr] = true;
-      q.push(knightTravails[curr[0]][curr[1]]);
-      count++;
+    if (!visited[curr[0]][curr[1]]) {
+      visited[curr[0]][curr[1]] = true;
+      //   console.log("BEGIN", knightTravails[curr[0]][curr[1]], "END");
+      knightTravails[curr[0]][curr[1]].forEach((edge) => {
+        if (edge) {
+          console.log(edge);
+          if (!visited[edge[0]][edge[1]]) {
+            q.push(edge);
+            count++;
+          }
+        }
+      });
     }
-    // for (const x of knightTravails[curr[0]][curr[1]]) {
 
-    // }
-    if (curr === dst) {
+    if (curr[0] === dst[0] && curr[1] === dst[1]) {
       return count;
     }
   }
 }
 
-// console.log(knightTravails[2][1]);
+// console.log(knightTravails[1][6]);
 // console.log(knightTravails[7][7]);
 console.log(knightMoves([0, 0], [7, 7]));
