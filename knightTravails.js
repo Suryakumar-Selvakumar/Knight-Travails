@@ -44,43 +44,29 @@ for (let x = 0; x < knightTravails.length; x++) {
 
 function knightMoves(src, dst) {
   let q = [],
-    backTrackArr = [],
-    edgeArr = [];
+    backTrackArr = [];
 
-  edgeArr.push(src);
   visited[src[0]][src[1]] = true;
   let firstCell = knightTravails[src[0]][src[1]];
   for (const adjCells of firstCell) {
     backTrackArr.push({ prev: src, adjCell: adjCells });
     q.push(adjCells);
   }
-  q.push(null);
-  edgeArr.push(null);
 
   while (q.length) {
     const curr = q.shift();
-    edgeArr.push(curr);
-    if (curr === null) {
-      if (q.length > 0) {
-        q.push(null);
-      }
-    } else {
-      let knightTravArr = knightTravails[curr[0]][curr[1]];
-      visited[curr[0]][curr[1]] = true;
+    let knightTravArr = knightTravails[curr[0]][curr[1]];
+    visited[curr[0]][curr[1]] = true;
 
-      for (const x of knightTravArr) {
-        if (!visited[x[0]][x[1]]) {
-          visited[x[0]][x[1]] = true;
-          backTrackArr.push({ prev: curr, adjCell: x });
-          q.push(x);
-        }
+    for (const x of knightTravArr) {
+      if (!visited[x[0]][x[1]]) {
+        visited[x[0]][x[1]] = true;
+        backTrackArr.push({ prev: curr, adjCell: x });
+        q.push(x);
       }
 
-      for (const edge of knightTravArr) {
-        if (edge[0] === dst[0] && edge[1] === dst[1]) {
-          edgeArr.push(edge);
-          return finalOutput(getShortestPath(backTrackArr, src, dst));
-        }
+      if (x[0] === dst[0] && x[1] === dst[1]) {
+        return finalOutput(getShortestPath(backTrackArr, src, dst));
       }
     }
   }
